@@ -22,3 +22,10 @@ conn is your Connection object (connected to a MySQL database)
 createStatement() is a method from the Connection class.
 
 It returns a Statement object, which is used to run SQL statements.
+
+# Real-World Analogy:
+MySQL is the warehouse (data storage).
+
+Java program is the manager who wants to use or update warehouse data.
+
+JDBC (Database Connectivity) is the communication bridge (like a telephone or API) between the manager and the warehouse.
