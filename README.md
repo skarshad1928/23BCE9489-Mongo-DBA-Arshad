@@ -8,3 +8,5 @@
 | `SQLException`      | Handles SQL-related exceptions                                      |
 | `ResultSetMetaData` | Provides info about columns in a `ResultSet`                        |
 | `CallableStatement` | Used to call stored procedures from the database                    |
+#simple understansing
+-- rs.getString("match_id")  the value of match id be   int but .get String convert into String
