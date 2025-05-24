@@ -11,5 +11,9 @@
 
 
 
-#simple understansing
+# simple understansing
 -- rs.getString("match_id")  the value of match id be   int but .get String convert into String
+
+# important note 1:
+-- String url = "jdbc:mysql://localhost:3306/ipl";// it  defines the java which database need to use
+
