@@ -18,5 +18,5 @@
 -- String url = "jdbc:mysql://localhost:3306/ipl";// it  defines the java which database need to use
 # Statement stmt = conn.createStatement();
 conn is your Connection object (connected to a MySQL database)
-createStatement() is a method from the Connection class.|
+createStatement() is a method from the Connection class.
 It returns a Statement object, which is used to run SQL statements.
