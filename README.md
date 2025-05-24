@@ -29,3 +29,11 @@ MySQL is the warehouse (data storage).
 Java program is the manager who wants to use or update warehouse data.
 
 JDBC (Database Connectivity) is the communication bridge (like a telephone or API) between the manager and the warehouse.
+
+# the difference between execute query and Update
+executeQuery()
+Purpose: Used to execute SQL SELECT statements that retrieve data from the database.
+
+executeUpdate()
+Purpose: Used to execute SQL statements that modify data or database structure — like INSERT, UPDATE, DELETE, or DDL commands (CREATE, DROP, etc.).
+
