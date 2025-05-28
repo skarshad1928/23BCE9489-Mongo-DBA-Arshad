@@ -12,18 +12,6 @@ show collections
 db.students.find()
 db.student.insertMany([{name:"ranjeet",age:44,college:"Vit-Ap"},{name:"ranveer",age:45,college:"Drama"}])
 db.students.insertMany([{name:"Ravi teja",age:54,colllege:"lanka"},{height:163,place:"rampur",name:"Kaham"}])
-
-let students = [];
-for (let i = 1; i <= 70; i++) {
-  students.push({
-    name: "Student" + i,
-    age: 18 + (i % 5),
-    department: i % 2 === 0 ? "CSE" : "ECE",
-    roll: "R" + (1000 + i)
-  });
-}
-db.student.insertMany(students);
-
 db.students.insertMany([
   { _id: 1, name: "Arshad",   mark: 92, location: "Vellore" },
   { _id: 2, name: "Nithin",   mark: 85, location: "Chennai" },
