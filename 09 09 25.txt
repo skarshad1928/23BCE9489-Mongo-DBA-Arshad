@@ -1,0 +1,171 @@
+data is store together  and accessed together
+All subclasses are stored in the same collection, distinguished by a type field. :Single Collection Inheritance
+✅ Pros:
+
+Simple, easy queries.
+
+All related documents in one place.
+
+❌ Cons:
+
+Some documents will have unused fields.
+
+Each subclass has its own collection, but may duplicate common fields.:Multiple Inheritance
+
+✅ Pros:
+
+Cleaner documents (no unused fields).
+
+Each collection tailored to its type.
+
+❌ Cons:
+
+Queries across types are harder.
+Store common fields in a base collection, and subclass-specific fields in separate collections.:Hybrid inheritence
+Use references (_id) to link them.
+
+✅ Pros:
+
+Less duplication.
+
+Can query base data easily.
+
+❌ Cons:
+
+Requires $lookup or multiple queries to fetch full objects.
+Great 👍 let’s connect MongoDB inheritance patterns to **Mongoose (ODM for Node.js)**, because Mongoose provides some structure to implement them.
+
+---
+
+## 🔹 Inheritance in **Mongoose**
+
+Mongoose doesn’t have **true class inheritance** like Java/ Python, but it supports it through **Schemas** and **Discriminators**.
+
+---
+
+### 1. **Discriminators (Single Collection Inheritance)**
+
+This is the most common pattern.
+
+* A **base schema** holds the common fields.
+* Subclasses (discriminators) extend the base with their own fields.
+* Everything is stored in **one collection**, distinguished by a `__t` field.
+
+**Example:**
+
+```js
+const mongoose = require("mongoose");
+
+const options = { discriminatorKey: '__t', collection: 'users' };
+
+// Base schema
+const userSchema = new mongoose.Schema({
+  name: String,
+}, options);
+
+const User = mongoose.model("User", userSchema);
+
+// Student schema (inherits User)
+const Student = User.discriminator("Student", new mongoose.Schema({
+  grade: String
+}));
+
+// Teacher schema (inherits User)
+const Teacher = User.discriminator("Teacher", new mongoose.Schema({
+  subject: String
+}));
+
+// Usage
+const alice = new Student({ name: "Alice", grade: "A" });
+const bob = new Teacher({ name: "Bob", subject: "Math" });
+
+await alice.save();
+await bob.save();
+```
+
+📌 MongoDB documents will look like:
+
+```json
+{
+  "_id": "...",
+  "name": "Alice",
+  "grade": "A",
+  "__t": "Student"
+}
+{
+  "_id": "...",
+  "name": "Bob",
+  "subject": "Math",
+  "__t": "Teacher"
+}
+```
+
+---
+
+### 2. **Separate Models (Multiple Collection Inheritance)**
+
+Instead of discriminators, you can just define **separate schemas/models**.
+
+**Example:**
+
+```js
+const studentSchema = new mongoose.Schema({
+  name: String,
+  grade: String
+});
+const teacherSchema = new mongoose.Schema({
+  name: String,
+  subject: String
+});
+
+const Student = mongoose.model("Student", studentSchema);
+const Teacher = mongoose.model("Teacher", teacherSchema);
+```
+
+📌 Students and Teachers will be stored in **different collections** (`students`, `teachers`).
+
+---
+
+### 3. **Hybrid Pattern (Base + References)**
+
+You can store shared fields in a **User schema**, and subclass fields in separate collections, linked by `userId`.
+
+**Example:**
+
+```js
+const userSchema = new mongoose.Schema({
+  name: String,
+  type: String
+});
+const User = mongoose.model("User", userSchema);
+
+const studentSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  grade: String
+});
+const Student = mongoose.model("Student", studentSchema);
+
+const teacherSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  subject: String
+});
+const Teacher = mongoose.model("Teacher", teacherSchema);
+```
+
+📌 Requires `$lookup` or `populate()` to join data:
+
+```js
+const student = await Student.findOne().populate("userId");
+```
+
+---
+
+✅ **Best Practice:**
+
+* Use **Discriminators** if you want **inheritance in one collection**.
+* Use **Separate Models** if subclass documents are very different.
+* Use **Hybrid** if you want a balance between reuse and flexibility.
+
+---
+
+Do you want me to **compare discriminators vs references in terms of query performance** (which one is faster, when to use each)?
